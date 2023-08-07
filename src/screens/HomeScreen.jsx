@@ -1,12 +1,14 @@
 import React from 'react'
 import { Text,SafeAreaView,StatusBar,View,TextInput, ScrollView} from 'react-native'
 import {Search,MapPin,Sliders} from "react-native-feather"
-import { themeColors } from '../theme'
 import Categories from '../components/Categories'
+import { themeColors } from '../theme'
+import FeaturedRow from '../components/FeaturedRow'
+import { featured } from '../../constants'
 
 const HomeScreen = () => {
   return (
-    <SafeAreaView className={'bg-white'}>
+    <SafeAreaView className={''}>
         {/* come back */}
         <StatusBar barStyle={"dark-content"}/>
         {/* search bar */}
@@ -29,11 +31,26 @@ const HomeScreen = () => {
         <ScrollView 
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
-                paddingBottom:20 
-            }}  
-        >
+                paddingBottom:20 }}
+                >
               {/* Categories */}
               <Categories/>
+
+              {/* featured */}
+            <View className="mt-5">
+                {
+                    [featured,featured,featured].map((item,index)=>{
+                        return(
+                           <FeaturedRow
+                            key={index}
+                            title={item.title}
+                            restaurants={item.restaurants}
+                            description={item.description}
+                           />
+                        )
+                    })
+                }
+            </View>
         </ScrollView>
     </SafeAreaView>
   )
