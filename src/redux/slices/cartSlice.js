@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  items:null
+  items:[]
 }
 
 export const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addCart:(state,action)=>{
+    addToCart:(state,action)=>{
         state.items = [...state.items,action.payload]
     },
-    removeCart:(state,action)=>{
+    removeFromCart:(state,action)=>{
         let newCart = [...state.items]
-        let itemIndex = state.items.findIndex(item=> item.id == action.payload.id)
+        let itemIndex = state.items.findIndex(item=> item._id == action.payload.id)
         if(itemIndex>=0){
             newCart.splice(itemIndex,1)
         }else{
@@ -28,12 +28,12 @@ export const cartSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addCart,removeCart,emptyCart } = cartSlice.actions
+export const { addToCart,removeFromCart,emptyCart } = cartSlice.actions
 
-export const selectCartItems = state => state.cart.item;
+export const selectCartItems = state => state.cart.items;
  
-export const selectCartItemById =(state,id)=> state.cart.items.filter(item=>item.id==id);
+export const selectCartItemById =(state,id)=> state.cart.items.filter(item=>item._id==id);
 
-export const selectCartTotal = state.cart.items.reduce((total,item)=>total=total+item.price,0)
+export const selectCartTotal = state => state.cart.items.reduce((total,item)=>total=total += item.price,0)
 
-export default cartSlice.reducer
+export default cartSlice.reducer;

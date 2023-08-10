@@ -1,24 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScrollView, Text,View,Image, TouchableOpacity, StatusBar } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { ArrowLeft ,MapPin} from 'react-native-feather'
 import { themeColors } from '../theme'
 import DishRow from '../components/DishRow'
 import CartIcon from '../components/CartIcon'
+import { useDispatch } from 'react-redux'
+import { setRestaurant } from '../redux/slices/restaurantSlice'
+import { urlFor } from '../../sanity'
 
 const RestaurantScreen = () => {
   const {params} = useRoute(); 
   const navigation = useNavigation()
   let item = params
+  const dispatch = useDispatch()
+  
+  useEffect(()=>{
+    if(item&& item._id){
+      dispatch(setRestaurant({...item}))
+    }
+  },[]) 
 
-  // console.log("Restaurant",item)
   return (
     <View>
       <CartIcon/>
       <StatusBar style="light"/>
      <ScrollView>
         <View className="relative">
-          <Image className="w-full h-72" source={item.image}/>
+          <Image className="w-full h-72" source={{uri:urlFor(item.image).url()}}/>
           <TouchableOpacity
             onPress={()=>navigation.goBack()}
             className="absolute top-14 left-4 bg-gray-50 p-2 rounded-full shadow">
@@ -39,7 +48,7 @@ const RestaurantScreen = () => {
                    <Text className="text-xs">
                       <Text className="text-green-700">{item.stars}</Text>
                           <Text className="text-gray-700">
-                            ({item.reviews} review) .<Text className="font-semibold">{item.category}</Text>
+                            ({item.reviews} review) .<Text className="font-semibold">{item?.type?.name}</Text>
                           </Text>
                       </Text>
                     </View>

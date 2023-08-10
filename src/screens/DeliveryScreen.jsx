@@ -3,24 +3,23 @@ import { Text,View,StyleSheet,Image,SafeAreaView, TouchableOpacity } from 'react
 import { featured } from '../../constants'
 import { useNavigation } from '@react-navigation/native'
 import MapView,{Marker} from 'react-native-maps'
-import { Dimensions } from 'react-native'
 import { themeColors } from '../theme'
 import { Phone, X } from 'react-native-feather'
+import { useDispatch, useSelector } from 'react-redux'
+import { emptyCart } from '../redux/slices/cartSlice'
+import { selectRestaurant } from '../redux/slices/restaurantSlice'
 
-const Delivery = () => {
-    const restaurant = featured.restaurants[0]
-    const [mapInitialized,setMapInitialized] = useState(true)
+const DeliveryScreen = () => {
+    const restaurant = useSelector(selectRestaurant)
     const navigation = useNavigation()
-    const onMapReady = async () => {
+    const dispatch = useDispatch()
 
-        if (mapInitialized) {
-            return;
-        }
+    console.log(restaurant)
 
-        // initialize map data here
-        
-        setMapInitialized(true);
-    };
+    const cancelOrder =()=>{
+        navigation.navigate("Home")
+        dispatch(emptyCart());
+    }
 
   return (
     <SafeAreaView className="flex-1">
@@ -35,7 +34,6 @@ const Delivery = () => {
         }}
         mapType='standard'
         >
-
         <Marker
             coordinate={{
                 latitude:restaurant.lat,
@@ -45,7 +43,6 @@ const Delivery = () => {
             description={restaurant.description}
             className="text-black"
             pinColor={themeColors.bgColor(1)}
-
         />
         </MapView>
         <View className="rounded-t-3xl  bg-white relative">
@@ -81,7 +78,8 @@ const Delivery = () => {
                 <TouchableOpacity className="bg-white p-2 rounded-full">
                     <Phone fill={themeColors.bgColor(1)} stroke={themeColors.bgColor(1)}/>
                 </TouchableOpacity>
-                <TouchableOpacity className="bg-white p-2 rounded-full" onPress={()=>navigation.navigate("Home")}>
+                <TouchableOpacity className="bg-white p-2 rounded-full"
+                 onPress={cancelOrder}>
                     <X strokeWidth={4} stroke={"red"}/>
                 </TouchableOpacity>
             </View>
@@ -90,5 +88,4 @@ const Delivery = () => {
   )
 }
 
-
-export default Delivery 
+export default DeliveryScreen
